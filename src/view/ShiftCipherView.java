@@ -1,17 +1,13 @@
 package view;
-
 import controller.ShiftCipherController;
 import model.ShiftCipherModel;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.*;
-
 public class ShiftCipherView extends JFrame {
-
     private ShiftCipherModel model;
     private JComboBox<String> languageComboBox;
     private JButton jButton_1, jButton_2, jButton_3, jButton_4, jButton_5;
@@ -25,8 +21,6 @@ public class ShiftCipherView extends JFrame {
     private String keyVigenere;
     private String keyHill;
     private int [][] arrHill;
-
-
     public ShiftCipherView(String cipherType) {
         this.cipherType = cipherType;
         try {
@@ -36,32 +30,31 @@ public class ShiftCipherView extends JFrame {
         }
         this.init();
     }
-
     public String getCipherType() {
         return cipherType;
     }
 
+    /**
+     * Giao diện cho tất cả thuật toán mã hóa cơ bản
+     */
     public void init() {
-
         this.setTitle("Mã Hóa " + this.getCipherType());
         this.setSize(800, 350);
         this.setLocationRelativeTo(null);
-
         JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 10));
         mainPanel.setBackground(new Color(25, 25, 112));
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-
         JPanel encryptPanel = createEncryptPanel();
         mainPanel.add(encryptPanel);
-
         JPanel decryptPanel = createDecryptPanel();
         mainPanel.add(decryptPanel);
-
         this.add(mainPanel);
         this.setVisible(true);
     }
-
-//    hiển thị giao diện bên trái
+    /**
+     * Hiển thị giao diện bên trái
+     * @return
+     */
     private JPanel createEncryptPanel() {
 
         ActionListener actionListener = new ShiftCipherController(this);
@@ -79,9 +72,10 @@ public class ShiftCipherView extends JFrame {
         BRPanel.setBackground(new Color(25, 25, 112));
 
         TextArea_1 = new JTextArea(4, 38);
-
         TextArea_1.setEnabled(true);
         TextArea_1.setEditable(true);
+        TextArea_1.setLineWrap(true);
+        TextArea_1.setWrapStyleWord(true);
         BRPanel.add(TextArea_1);
         panel.add(BRPanel);
 
@@ -112,7 +106,6 @@ public class ShiftCipherView extends JFrame {
 
             jTextField_4 = new JTextField(10);
             keypanel.add(jTextField_4);
-
         }
         String[] languages = {"Tiếng Anh", "Tiếng Việt"};
         languageComboBox = new JComboBox<>(languages);
@@ -149,15 +142,18 @@ public class ShiftCipherView extends JFrame {
         rightPanel.setBackground(new Color(25, 25, 112));
 
         TextArea_2 = new JTextArea(4, 38);
-
+        TextArea_2.setLineWrap(true);
+        TextArea_2.setWrapStyleWord(true);
         TextArea_2.setEnabled(true);
         TextArea_2.setEditable(true);
         rightPanel.add(new JScrollPane(TextArea_2));
         panel.add(rightPanel);
         return panel;
     }
-
-//    hiển thị giao diện bên phải
+    /**
+     * Hiển thị sao diện bên phải
+     * @return
+     */
     private JPanel createDecryptPanel() {
         ActionListener actionListener = new ShiftCipherController(this);
         JPanel panel = new JPanel();
@@ -175,15 +171,14 @@ public class ShiftCipherView extends JFrame {
         leftPanel.setBackground(new Color(25, 25, 112));
 
         TextArea_3 = new JTextArea(4, 38);
-
+        TextArea_3.setLineWrap(true);
+        TextArea_3.setWrapStyleWord(true); //
         TextArea_3.setEnabled(true);
         TextArea_3.setEditable(true);
         leftPanel.add(new JScrollPane(TextArea_3));
         panel.add(leftPanel);
 
         JPanel keypanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-
         if (this.getCipherType().equals("Dịch Chuyển") || this.getCipherType().equals("Thay Thế") || this.getCipherType().equals("Vigenere") || this.getCipherType().equals("Hill")) {
 
             Label keyLabel = new Label("Khóa ");
@@ -235,25 +230,36 @@ public class ShiftCipherView extends JFrame {
         BRPanel.setBackground(new Color(25, 25, 112));
 
         TextArea_4 = new JTextArea(4, 38);
+        TextArea_4.setLineWrap(true);
+        TextArea_4.setWrapStyleWord(true); //
         TextArea_4.setEnabled(true);
         TextArea_4.setEditable(true);
         BRPanel.add(TextArea_4);
         panel.add(BRPanel);
         return panel;
     }
-// Tạo key mã hóa dịch chuyển
+    /**
+     * Tạo key mã hóa dịch chuyển
+     * @throws Exception nếu xảy ra lỗi khi tạo key
+     */
     public void setkey() throws Exception {
         getLanguageTranslator();
         key = model.genKey();
         jTextField_1.setText(String.valueOf(key));
     }
-// Tạo key mã hóa thay thế
+    /**
+     * Tạo key mã hóa thay thế
+     * @throws Exception nếu xảy ra lỗi khi tạo key
+     */
     public void setKeyTT() throws Exception {
         getLanguageTranslator();
         keyTT = model.genKeyTT();
         jTextField_1.setText(keyTT);
     }
-// Tạo key mã hóa affine
+    /**
+     * Tạo key mã hóa affine
+     * @throws Exception nếu xảy ra lỗi khi tạo key
+     */
     public void setKeyAffine() throws Exception {
         getLanguageTranslator();
         int alphabetSize = model.getAlphabet().length();
@@ -262,21 +268,30 @@ public class ShiftCipherView extends JFrame {
         jTextField_4.setText(String.valueOf(arr[1]));
 
     }
-// Tạo key mã hóa Vigenere
+    /**
+     * Tạo key mã hóa Vigenere
+     * @throws Exception nếu xảy ra lỗi khi tạo key
+     */
     public void setkeyVigenere () throws Exception {
         getLanguageTranslator();
         String  alphabet = model.getAlphabet();
         keyVigenere = model.getKeyVigenere(alphabet);
         jTextField_1.setText(keyVigenere);
     }
-// Tạo key mã hóa Hill
+    /**
+     * Tạo key mã hóa Hill
+     * @throws Exception nếu xảy ra lỗi khi tạo key
+     */
     public void setKeyHill () throws Exception {
         getLanguageTranslator();
         keyHill = model.getKeyHill();
         arrHill = model.convertArr(keyHill);
         jTextField_1.setText(keyHill);
     }
-// Mã hóa dịch chuyển
+    /**
+     * Mã hóa dịch chuyển
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void encrypt() throws Exception {
         getLanguageTranslator();
         if (jTextField_1.getText().trim().isEmpty() || TextArea_1.getText().trim().isEmpty()) {
@@ -290,7 +305,10 @@ public class ShiftCipherView extends JFrame {
         TextArea_2.setText(encrypt);
         TextArea_3.setText(encrypt);
     }
-// Mã hóa thay thế
+    /**
+     * Mã hóa thay thế
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void encryptTT() throws Exception {
         getLanguageTranslator();
         if (jTextField_1.getText().trim().isEmpty() || TextArea_1.getText().trim().isEmpty()) {
@@ -304,7 +322,10 @@ public class ShiftCipherView extends JFrame {
         TextArea_2.setText(encryptTT);
         TextArea_3.setText(encryptTT);
     }
-// Mã hóa affine
+    /**
+     * Mã hóa affine
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void encryptAffine() throws Exception {
         getLanguageTranslator();
         if (jTextField_3.getText().trim().isEmpty() || TextArea_1.getText().trim().isEmpty() || jTextField_4.getText().trim().isEmpty()) {
@@ -320,7 +341,10 @@ public class ShiftCipherView extends JFrame {
         TextArea_3.setText(encryptAffine);
 
     }
-// Mã hóa Vigenere
+    /**
+     * Mã hóa Vigenere
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void encryptVigenere() throws Exception {
         getLanguageTranslator();
         if (jTextField_1.getText().trim().isEmpty() || TextArea_1.getText().trim().isEmpty()) {
@@ -333,8 +357,10 @@ public class ShiftCipherView extends JFrame {
         TextArea_2.setText(encryptVigenere);
         TextArea_3.setText(encryptVigenere);
     }
-
-//  Mã hóa Hill
+    /**
+     * Mã hóa Hill
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void encryptHill() throws Exception {
         if (jTextField_1.getText().trim().isEmpty() || TextArea_1.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập key hoặc nội dung mã hoá", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -345,7 +371,10 @@ public class ShiftCipherView extends JFrame {
         TextArea_2.setText(encryptHill);
         TextArea_3.setText(encryptHill);
     }
-// giải mã dịch chuyển
+    /**
+     * Giải mã dịch chuyển
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void decrypt() throws Exception{
 
         if (jTextField_2.getText().trim().isEmpty() || TextArea_3.getText().trim().isEmpty()) {
@@ -358,7 +387,10 @@ public class ShiftCipherView extends JFrame {
         String decrypt = model.decrypt(text, alphabet, key);
         TextArea_4.setText(decrypt);
     }
-// giải mã thay thế
+    /**
+     * Giải mã thay thế
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void decryptTT() throws Exception {getLanguageTranslator();
         if (jTextField_2.getText().trim().isEmpty() || TextArea_3.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập key hoặc nội dung giã mã", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -370,7 +402,10 @@ public class ShiftCipherView extends JFrame {
         String decryptTT = model.decryptTT(text, alphabet, keyTT);
         TextArea_4.setText(decryptTT);
     }
-// giải mã affine
+    /**
+     * Giải mã affine
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void decryptAffine() throws Exception {
 
         if (jTextField_5.getText().trim().isEmpty() || TextArea_3.getText().trim().isEmpty() || jTextField_5.getText().trim().isEmpty()) {
@@ -384,7 +419,10 @@ public class ShiftCipherView extends JFrame {
         String decryptAffine = model.decryptAffine(text, keyA, keyB, alphabet);
         TextArea_4.setText(decryptAffine);
     }
-// giải mã vigenere
+    /**
+     * Giải mã vigenere
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void decryptVigenere () {
         if (jTextField_2.getText().trim().isEmpty() || TextArea_3.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập key hoặc nội dung giã mã", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -395,7 +433,10 @@ public class ShiftCipherView extends JFrame {
         String decryptVigenere = model.decryptVigenere(text, alphabet, keyVigenere);
         TextArea_4.setText(decryptVigenere);
     }
-// giải mã hill
+    /**
+     * Giải mã hill
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void decryptHill() {
         if (jTextField_2.getText().trim().isEmpty() || TextArea_3.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập key hoặc nội dung giã mã", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -406,9 +447,11 @@ public class ShiftCipherView extends JFrame {
         String decryptHill = model.decryptHill(text, inverseKey);
         TextArea_4.setText(decryptHill);
     }
-// lưu key vào file.text
+    /**
+     * Lưu key vào file.text
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void saveKey(String str) {
-
         if (str.equals("Dịch Chuyển") || str.equals("Thay Thế") || str.equals("Vigenere") || str.equals("Hill")) {
             if (jTextField_1.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Key chưa được tạo!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -430,7 +473,6 @@ public class ShiftCipherView extends JFrame {
                 fileToSave = new File(fileToSave.getAbsolutePath() + ".txt");
             }
             try (FileWriter writer = new FileWriter(fileToSave)) {
-
                 if (str.equals("Dịch Chuyển") || str.equals("Thay Thế") || str.equals("Vigenere") || str.equals("Hill")) {
                     writer.write("Key: " + jTextField_1.getText().trim());
                 } else if (str.equals("Affine")) {
@@ -443,7 +485,10 @@ public class ShiftCipherView extends JFrame {
             }
         }
     }
-// mở key từ file.txt
+    /**
+     * Mở key từ file.txt
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void openKey(String str) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Mở key");
@@ -475,7 +520,10 @@ public class ShiftCipherView extends JFrame {
             }
         }
     }
-// chọn mã hóa theo tiếng anh hoặc tiếng việt
+    /**
+     * Chọn mã hóa theo tiếng anh hoặc tiếng việt
+     * @throws Exception nếu xảy ra lỗi khi mã hóa
+     */
     public void getLanguageTranslator() throws Exception {
         String selectedLanguage = (String) languageComboBox.getSelectedItem();
         if (selectedLanguage.equals("Tiếng Việt")) {
@@ -484,5 +532,4 @@ public class ShiftCipherView extends JFrame {
             model = new ShiftCipherModel("EN");
         }
     }
-
 }

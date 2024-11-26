@@ -8,7 +8,10 @@ public class ShiftCipherController implements ActionListener {
     public ShiftCipherController(ShiftCipherView view) {
         this.view = view;
     }
-//    xử lý sự kiên mã hóa
+    /**
+     * Xử lý các sự kiện khi người dùng tương tác với giao diện.
+     * @param e sự kiện  chứa thông tin về sự kiện đã xảy ra.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
